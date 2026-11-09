@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creator Team Workspace - GitHub Pages Ready</title>
+    <!-- FontAwesome & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           RESET & CORE VARIABLES
+           ========================================================================== */
+        :root {
+            --bg-body: #070a11;
+            --bg-sidebar: #0d1322;
+            --bg-card: #131b2e;
+            --bg-card-hover: #1b2640;
+            --bg-input: #0a0f1d;
+            --border-color: #1e2d4a;
+            --border-focus: #00f2fe;
+
+            --yt-red: #ff0050;
+            --tt-cyan: #00f2fe;
+            --accent-purple: #7928ca;
+            --accent-green: #10b981;
+            --accent-warning: #f59e0b;
+
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-glow: 0 0 25px rgba(0, 242, 254, 0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* ==========================================================================
+           HEADER & HAMBURGER NAVIGATION
+           ========================================================================== */
+        header {
+            background-color: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.85rem 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .brand-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, var(--yt-red), var(--accent-purple), var(--tt-cyan));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.1rem;
+            box-shadow: 0 0 15px rgba(255, 0, 80, 0.35);
+        }
+
+        .brand-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #fff, var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+        }
+
+        .account-switcher {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-color);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .hamburger {
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            width: 28px;
+            z-index: 102;
+        }
+
+        .hamburger span {
+            height: 3px;
+            width: 100%;
+            background-color: var(--text-main);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(6px, 6px); }
+        .hamburger.active span:nth-child(2) { opacity: 0; }
+        .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(6px, -6px); }
+
+        /* ==========================================================================
+           SIDEBAR DRAWER MENU
+           ========================================================================== */
+        .sidebar-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 98;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100%;
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border-color);
+            z-index: 99;
+            padding: 5rem 1.25rem 2rem 1.25rem;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .menu-section-label {
+            font-size: 0.68rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+            margin: 1.2rem 0 0.5rem 0.5rem;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            padding: 0.7rem 0.9rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .sidebar-link:hover, .sidebar-link.active {
+            background-color: var(--bg-card);
+            color: var(--tt-cyan);
+            border-left: 3px solid var(--tt-cyan);
+        }
+
+        /* ==========================================================================
+           AUTH SYSTEM (LOGIN / SIGNUP / RESET)
+           ========================================================================== */
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            background: radial-gradient(circle at center, #17233b 0%, var(--bg-body) 100%);
+        }
+
+        .auth-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 440px;
+            padding: 2.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--yt-red), var(--tt-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-control {
+            width: 100%;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--tt-cyan);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.8rem 1.25rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--yt-red), var(--accent-purple));
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(255, 0, 80, 0.3);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-card-hover);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--tt-cyan);
+        }
+
+        .auth-footer-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .auth-footer-link a {
+            color: var(--tt-cyan);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-footer-link a:hover {
+            text-decoration: underline;
+        }
+
+        .demo-accounts {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .demo-accounts strong {
+            color: var(--tt-cyan);
+        }
+
+        /* ==========================================================================
+           MAIN CONTENT VIEWS
+           ========================================================================== */
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+        }
+
+        .view-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .view-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .view-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .view-title h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+        }
+
+        .view-title p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* DASHBOARD METRICS GRID */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            transition: var(--transition);
+        }
+
+        .metric-card:hover {
+            border-color: var(--border-focus);
+            transform: translateY(-2px);
+        }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--tt-cyan);
+            margin-top: 0.5rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.4rem;
+        }
+
+        .online { background-color: var(--accent-green); box-shadow: 0 0 10px var(--accent-green); }
+        .offline { background-color: var(--text-dim); }
+
+        /* ==========================================================================
+           TASK MANAGEMENT UI
+           ========================================================================== */
+        .task-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .task-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .task-card:hover {
+            border-color: var(--tt-cyan);
+            transform: translateY(-2px);
+        }
+
+        .priority-badge {
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .p-Urgent { background: rgba(255, 0, 80, 0.2); color: var(--yt-red); border: 1px solid rgba(255, 0, 80, 0.4); }
+        .p-High { background: rgba(245, 158, 11, 0.2); color: var(--accent-warning); border: 1px solid rgba(245, 158, 11, 0.4); }
+        .p-Medium { background: rgba(0, 242, 254, 0.2); color: var(--tt-cyan); border: 1px solid rgba(0, 242, 254, 0.4); }
+        .p-Low { background: rgba(148, 163, 184, 0.2); color: var(--text-muted); border: 1px solid rgba(148, 163, 184, 0.4); }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-sm {
+            padding: 0.35rem 0.65rem;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            width: auto;
+        }
+
+        /* ==========================================================================
+           CONTENT PLANNER SYSTEM
+           ========================================================================== */
+        .content-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        /* ==========================================================================
+           WHATSAPP INSPIRED PRIVATE CHAT
+           ========================================================================== */
+        .chat-container {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            height: 650px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background-color: #080c16;
+            background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+            background-size: 20px 20px;
+        }
+
+        .message-bubble {
+            max-width: 68%;
+            padding: 0.85rem 1.1rem;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            position: relative;
+            line-height: 1.45;
+        }
+
+        .msg-right {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #7928ca, #5b21b6);
+            color: #fff;
+            border-bottom-right-radius: 2px;
+            box-shadow: 0 4px 12px rgba(121, 40, 202, 0.3);
+        }
+
+        .msg-left {
+            align-self: flex-start;
+            background-color: var(--bg-card-hover);
+            color: #fff;
+            border-bottom-left-radius: 2px;
+            border: 1px solid var(--border-color);
+        }
+
+        .msg-sender {
+            font-size: 0.72rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--tt-cyan);
+        }
+
+        .msg-time {
+            font-size: 0.65rem;
+            opacity: 0.65;
+            text-align: right;
+            margin-top: 0.4rem;
+        }
+
+        .chat-input-bar {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background-color: var(--bg-sidebar);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            width: 100%;
+            max-width: 520px;
+            padding: 2rem;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==========================================================================
+         AUTHENTICATION SCREENS (LOGIN / SIGNUP / RESET)
+         ========================================================================== -->
+    <div id="auth-view" class="auth-wrapper">
+        <!-- 1. LOGIN SCREEN -->
+        <div id="screen-login" class="auth-card">
+            <div class="auth-header">
+                <div class="brand-icon" style="margin: 0 auto 0.75rem auto; width: 48px; height: 48px; font-size: 1.4rem;">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+                <h1 class="auth-title">Creator Workspace</h1>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">YouTube & TikTok Creator Team Portal</p>
+            </div>
+
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="login-username" class="form-control" placeholder="e.g. Owner or Friend" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="login-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Log In to Workspace</button>
+            </form>
+
+            <div class="auth-footer-link">
+                Don't have an account? <a onclick="showAuthScreen('signup')">Sign Up</a>
+            </div>
+
+            <div class="demo-accounts">
+                <div><i class="fa-solid fa-key mr-1"></i> <strong>Default Credentials:</strong></div>
+                <div style="margin-top: 0.35rem;">• Username: <strong>Owner</strong> | Password: <strong>OwnerPass123!</strong></div>
+                <div>• Username: <strong>Friend</strong> | Password: <strong>FriendPass123!</strong></div>
+            </div>
+        </div>
+
+        <!-- 2. SIGNUP SCREEN -->
+        <div id="screen-signup" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <div class="brand-icon" style="margin: 0 auto 0.75rem auto; width: 48px; height: 48px; font-size: 1.4rem;">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h1 class="auth-title">Create Account</h1>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Join Creator Team Workspace</p>
+            </div>
+
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Choose Username</label>
+                    <input type="text" id="reg-username" class="form-control" placeholder="Enter your username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="reg-password" class="form-control" placeholder="Create a password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up & Enter</button>
+            </form>
+
+            <div class="auth-footer-link">
+                Already have an account? <a onclick="showAuthScreen('login')">Log In</a>
+            </div>
+        </div>
+
+        <!-- 3. RESET PASSWORD SCREEN -->
+        <div id="screen-reset" class="auth-card" style="display: none;">
+            <div class="auth-header">
+                <div class="brand-icon" style="margin: 0 auto 0.75rem auto; width: 48px; height: 48px; font-size: 1.4rem;">
+                    <i class="fa-solid fa-key"></i>
+                </div>
+                <h1 class="auth-title">Reset Password</h1>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.25rem;">Recover your account access</p>
+            </div>
+
+            <form onsubmit="handleReset(event)">
+                <div class="form-group">
+                    <label class="form-label">Account Username</label>
+                    <input type="text" id="reset-username" class="form-control" placeholder="Enter username" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" id="reset-new-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Password</button>
+            </form>
+
+            <div class="auth-footer-link">
+                Remember your password? <a onclick="showAuthScreen('login')">Log In</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         MAIN APP INTERFACE
+         ========================================================================== -->
+    <div id="app-view" style="display: none; flex-direction: column; min-height: 100vh;">
+        <!-- Top Navigation Header -->
+        <header>
+            <a href="#" class="brand">
+                <div class="brand-icon"><i class="fa-solid fa-play"></i></div>
+                <span class="brand-title">Creator Workspace</span>
+            </a>
+
+            <div class="header-controls">
+                <div class="account-switcher">
+                    <span class="status-dot online"></span>
+                    <span>Logged in as: <strong id="header-username" style="color: var(--tt-cyan);">Owner</strong></span>
+                </div>
+                <div class="hamburger" id="hamburger-btn" onclick="toggleSidebar()">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Overlay & Animated Drawer Menu -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+        <nav class="sidebar" id="sidebar-drawer">
+            <div>
+                <div class="menu-section-label">Main Navigation</div>
+                <ul class="sidebar-menu">
+                    <li class="sidebar-link active" onclick="navigateView('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</li>
+                    <li class="sidebar-link" onclick="navigateView('tasks-my')"><i class="fa-solid fa-user-check"></i> My Tasks</li>
+                    <li class="sidebar-link" onclick="navigateView('tasks-all')"><i class="fa-solid fa-list-check"></i> All Tasks</li>
+                </ul>
+
+                <div class="menu-section-label">Content Creation</div>
+                <ul class="sidebar-menu">
+                    <li class="sidebar-link" onclick="navigateView('youtube')"><i class="fa-brands fa-youtube" style="color: var(--yt-red);"></i> YouTube Studio</li>
+                    <li class="sidebar-link" onclick="navigateView('tiktok')"><i class="fa-brands fa-tiktok" style="color: var(--tt-cyan);"></i> TikTok Studio</li>
+                    <li class="sidebar-link" onclick="navigateView('calendar')"><i class="fa-solid fa-calendar-days"></i> Content Calendar</li>
+                </ul>
+
+                <div class="menu-section-label">Collaboration & Security</div>
+                <ul class="sidebar-menu">
+                    <li class="sidebar-link" onclick="navigateView('messages')"><i class="fa-solid fa-comments"></i> Private Messages</li>
+                    <li class="sidebar-link" onclick="navigateView('history')"><i class="fa-solid fa-clock-rotate-left"></i> Activity History</li>
+                    <li class="sidebar-link" onclick="navigateView('password')"><i class="fa-solid fa-lock"></i> Change Password</li>
+                    <li class="sidebar-link" onclick="openResetModalFromMenu()"><i class="fa-solid fa-key"></i> Reset Password</li>
+                </ul>
+            </div>
+
+            <ul class="sidebar-menu" style="margin-top: 2rem;">
+                <li class="sidebar-link" onclick="handleLogout()" style="color: var(--yt-red);"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
+            </ul>
+        </nav>
+
+        <!-- Main Workspace Views -->
+        <main>
+            <!-- 1. DASHBOARD VIEW -->
+            <section id="view-dashboard" class="view-section active">
+                <div class="view-header">
+                    <div class="view-title">
+                        <h1>Welcome back, <span id="dash-greeting-user" style="color: var(--tt-cyan);">Creator</span>!</h1>
+                        <p>Live production metrics and team collaboration status.</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>TEAM ONLINE STATUS</span>
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div style="margin-top: 0.85rem; font-size: 0.9rem;" id="team-status-container">
+                            <!-- Dynamically rendered team members and status -->
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>TOTAL TASKS</span>
+                            <i class="fa-solid fa-tasks"></i>
+                        </div>
+                        <div class="metric-value" id="dash-task-total">0</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>PENDING / IN PROGRESS</span>
+                            <i class="fa-solid fa-spinner"></i>
+                        </div>
+                        <div class="metric-value" id="dash-task-pending" style="color: var(--accent-warning);">0</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>COMPLETED TASKS</span>
+                            <i class="fa-solid fa-check-double"></i>
+                        </div>
+                        <div class="metric-value" id="dash-task-completed" style="color: var(--accent-green);">0</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>YOUTUBE VIDEOS</span>
+                            <i class="fa-brands fa-youtube" style="color: var(--yt-red);"></i>
+                        </div>
+                        <div class="metric-value" id="dash-yt-count">0</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span>TIKTOK CLIPS</span>
+                            <i class="fa-brands fa-tiktok" style="color: var(--tt-cyan);"></i>
+                        </div>
+                        <div class="metric-value" id="dash-tt-count">0</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. TASK MANAGEMENT VIEW -->
+            <section id="view-tasks" class="view-section">
+                <div class="view-header">
+                    <div class="view-title">
+                        <h1 id="task-view-heading">Task Management</h1>
+                        <p>Assign, track, review, and approve content production tasks.</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: auto;" onclick="openTaskModal()">
+                        <i class="fa-solid fa-plus"></i> Create New Task
+                    </button>
+                </div>
+
+                <div class="task-grid" id="task-card-container"></div>
+            </section>
+
+            <!-- 3. YOUTUBE CONTENT PLANNER -->
+            <section id="view-youtube" class="view-section">
+                <div class="view-header">
+                    <div class="view-title">
+                        <h1 style="color: var(--yt-red);"><i class="fa-brands fa-youtube mr-2"></i> YouTube Studio Planner</h1>
+                        <p>Manage long-form video scripts, thumbnails, and publishing schedules.</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: auto; background: var(--yt-red);" onclick="openContentModal('YouTube')">
+                        <i class="fa-solid fa-plus"></i> New YouTube Video
+                    </button>
+                </div>
+                <div class="content-card-grid" id="yt-content-container"></div>
+            </section>
+
+            <!-- 4. TIKTOK CONTENT PLANNER -->
+            <section id="view-tiktok" class="view-section">
+                <div class="view-header">
+                    <div class="view-title">
+                        <h1 style="color: var(--tt-cyan);"><i class="fa-brands fa-tiktok mr-2"></i> TikTok & Shorts Studio</h1>
+                        <p>Track short-form hooks, video scripts, captions, and trending hashtags.</p>
+                    </div>
+                    <button class="btn btn-primary" style="width: auto; background: var(--tt-cyan); color: #000;" onclick="openContentModal('TikTok')">
+                        <i class="fa-solid fa-plus"></i> New TikTok Clip
+                    </button>
+                </div>
+                <div class="content-card-grid" id="tt-content-container"></div>
+            </section>
+
+            <!-- 5. CONTENT CALENDAR VIEW -->
+            <section id="view-calendar" class="view-section">
+                <div class="view-header">
+                    <div class="view-title">
+                        <h1><i class="fa-solid fa-calendar-days mr-2"></i> Publishing Calendar</h1>
+                        <p>Schedule of upcoming YouTube videos and TikTok posts.</p>
+                    </div>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;" id="calendar-render"></div>
+            </section>
+
+            <!-- 6. PRIVATE MESSAGING (WHATSAPP-INSPIRED) -->
+            <section id="view-messages" class="view-section">
+                <div class="view-header">
+                    <div class="view-title">
+                        <h1><i class="fa-solid fa-comments mr-2"></i> Private Creator Chat</h1>
+                        <p>Encrypted messaging between teammates.</p>
+                    </div>
+                </div>
+
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div style="display: flex; align-items: center; gap: 0.75rem;">
+                            <span class="status-dot online"></span>
+                            <span style="font-weight: 700;" id="chat-target-user">Creator Secure Channel</span>
+                        </div>
+                    </div>
+                    <div class="chat-messages" id="chat-messages-box"></div>
+                    <form class="chat-input-bar" onsubmit="handleSendMessage(event)">
+                        <input type="text" id="chat-input" class="form-control" placeholder="Type a message..." required>
+                        <button type="submit" class="btn btn-primary" style="width: auto; padding: 0 1.5rem;">Send</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- 7. ACTIVITY HISTORY VIEW -->
+            <section id="view-history" class="view-section">
+                <div class="view-header">
+                    <div class="view-title">
+                        <h1><i class="fa-solid fa-clock-rotate-left mr-2"></i> Activity Log</h1>
+                        <p>Audit history of tasks and content workflow updates.</p>
+                    </div>
+                </div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.5rem;" id="activity-log-box"></div>
+            </section>
+
+            <!-- 8. CHANGE PASSWORD VIEW -->
+            <section id="view-password" class="view-section">
+                <div class="auth-card" style="margin: 0 auto;">
+                    <h2 style="font-size: 1.3rem; margin-bottom: 1rem;">Change Account Password</h2>
+                    <form onsubmit="handleChangePassword(event)">
+                        <div class="form-group">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" id="change-current-pass" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" id="change-new-pass" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Password</button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- ==========================================================================
+         MODALS (CREATE TASK & CONTENT ITEM)
+         ========================================================================== -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal-card">
+            <h2 style="font-size: 1.25rem; margin-bottom: 1rem;">Create Production Task</h2>
+            <form onsubmit="handleSaveTask(event)">
+                <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input type="text" id="modal-task-title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description & Instructions</label>
+                    <textarea id="modal-task-desc" class="form-control" rows="3"></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Assign To</label>
+                        <select id="modal-task-assignee" class="form-control">
+                            <!-- Populated dynamically with registered users -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select id="modal-task-priority" class="form-control">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" id="modal-task-duedate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Work File / Video Drive URL</label>
+                    <input type="url" id="modal-task-link" class="form-control" placeholder="https://drive.google.com/...">
+                </div>
+                <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem;">
+                    <button type="button" class="btn btn-secondary" onclick="closeModals()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+         PURE VANILLA JAVASCRIPT LOGIC
+         ========================================================================== -->
+    <script>
+        /* ==========================================================================
+           LOCAL DATABASE INITIALIZATION & SEEDING
+           ========================================================================== */
+        const DB_KEYS = {
+            USERS: 'ctw_users',
+            TASKS: 'ctw_tasks',
+            CONTENT: 'ctw_content',
+            MESSAGES: 'ctw_messages',
+            HISTORY: 'ctw_history',
+            SESSION: 'ctw_session',
+            HEARTBEATS: 'ctw_heartbeats'
+        };
+
+        async function hashString(str) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(str + "_SALT_CREATOR_2026");
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function initDatabaseDefaults() {
+            if (!localStorage.getItem(DB_KEYS.USERS)) {
+                const ownerPassHash = await hashString("OwnerPass123!");
+                const friendPassHash = await hashString("FriendPass123!");
+
+                const defaultUsers = [
+                    { id: 'u_owner', username: 'Owner', passwordHash: ownerPassHash },
+                    { id: 'u_friend', username: 'Friend', passwordHash: friendPassHash }
+                ];
+                localStorage.setItem(DB_KEYS.USERS, JSON.stringify(defaultUsers));
+            }
+
+            if (!localStorage.getItem(DB_KEYS.TASKS)) {
+                const defaultTasks = [
+                    {
+                        id: 't_1',
+                        title: 'Edit 4K Desk Tour Video Cut v1',
+                        description: 'Assemble main camera angle with lo-fi audio track.',
+                        priority: 'High',
+                        status: 'In Progress',
+                        assignedTo: 'Owner',
+                        creator: 'Friend',
+                        dueDate: new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0],
+                        fileLink: 'https://drive.google.com',
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 't_2',
+                        title: 'Design YouTube Thumbnail Option A & B',
+                        description: 'Create high CTR expression cutouts.',
+                        priority: 'Urgent',
+                        status: 'Pending',
+                        assignedTo: 'Friend',
+                        creator: 'Owner',
+                        dueDate: new Date(Date.now() + 86400000 * 4).toISOString().split('T')[0],
+                        fileLink: '',
+                        createdAt: new Date().toISOString()
+                    }
+                ];
+                localStorage.setItem(DB_KEYS.TASKS, JSON.stringify(defaultTasks));
+            }
+
+            if (!localStorage.getItem(DB_KEYS.CONTENT)) {
+                const defaultContent = [
+                    { id: 'c_1', platform: 'YouTube', title: 'I Setup a Secret $10,000 Studio', stage: 'Scripting', targetDate: '2026-11-20', url: '' },
+                    { id: 'c_2', platform: 'TikTok', title: '3 Lighting Tricks You Need to Try', stage: 'Published', targetDate: '2026-11-10', url: 'https://tiktok.com' }
+                ];
+                localStorage.setItem(DB_KEYS.CONTENT, JSON.stringify(defaultContent));
+            }
+
+            if (!localStorage.getItem(DB_KEYS.MESSAGES)) {
+                const defaultMessages = [
+                    { id: 'm_1', sender: 'Owner', receiver: 'Friend', text: 'Hey! Did you check the new video rough cut?', timestamp: new Date(Date.now() - 3600000).toISOString() },
+                    { id: 'm_2', sender: 'Friend', receiver: 'Owner', text: 'Yes! Looking fire 🔥 Working on the color grading now.', timestamp: new Date(Date.now() - 1800000).toISOString() }
+                ];
+                localStorage.setItem(DB_KEYS.MESSAGES, JSON.stringify(defaultMessages));
+            }
+        }
+
+        /* ==========================================================================
+           STATE & AUTHENTICATION
+           ========================================================================== */
+        let currentUser = JSON.parse(localStorage.getItem(DB_KEYS.SESSION) || 'null');
+
+        function showAuthScreen(screenName) {
+            document.getElementById('screen-login').style.display = 'none';
+            document.getElementById('screen-signup').style.display = 'none';
+            document.getElementById('screen-reset').style.display = 'none';
+
+            if (screenName === 'login') {
+                document.getElementById('screen-login').style.display = 'block';
+            } else if (screenName === 'signup') {
+                document.getElementById('screen-signup').style.display = 'block';
+            } else if (screenName === 'reset') {
+                document.getElementById('screen-reset').style.display = 'block';
+            }
+        }
+
+        function openResetModalFromMenu() {
+            toggleSidebar();
+            document.getElementById('auth-view').style.display = 'flex';
+            document.getElementById('app-view').style.display = 'none';
+            showAuthScreen('reset');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const uname = document.getElementById('login-username').value.trim();
+            const pass = document.getElementById('login-password').value;
+            const hash = await hashString(pass);
+
+            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || '[]');
+            const found = users.find(u => u.username.toLowerCase() === uname.toLowerCase() && u.passwordHash === hash);
+
+            if (found) {
+                currentUser = { id: found.id, username: found.username };
+                localStorage.setItem(DB_KEYS.SESSION, JSON.stringify(currentUser));
+                initApp();
+            } else {
+                alert('Invalid username or password!');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const uname = document.getElementById('reg-username').value.trim();
+            const pass = document.getElementById('reg-password').value;
+            const hash = await hashString(pass);
+
+            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || '[]');
+            if (users.some(u => u.username.toLowerCase() === uname.toLowerCase())) {
+                alert('Username already exists!');
+                return;
+            }
+
+            const newUser = { id: 'u_' + Date.now(), username: uname, passwordHash: hash };
+            users.push(newUser);
+            localStorage.setItem(DB_KEYS.USERS, JSON.stringify(users));
+
+            currentUser = { id: newUser.id, username: newUser.username };
+            localStorage.setItem(DB_KEYS.SESSION, JSON.stringify(currentUser));
+            initApp();
+        }
+
+        async function handleReset(e) {
+            e.preventDefault();
+            const uname = document.getElementById('reset-username').value.trim();
+            const pass = document.getElementById('reset-new-password').value;
+            const hash = await hashString(pass);
+
+            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || '[]');
+            const idx = users.findIndex(u => u.username.toLowerCase() === uname.toLowerCase());
+
+            if (idx !== -1) {
+                users[idx].passwordHash = hash;
+                localStorage.setItem(DB_KEYS.USERS, JSON.stringify(users));
+                alert('Password reset successfully! Please log in.');
+                showAuthScreen('login');
+            } else {
+                alert('Username not found!');
+            }
+        }
+
+        async function handleChangePassword(e) {
+            e.preventDefault();
+            const currentPass = document.getElementById('change-current-pass').value;
+            const newPass = document.getElementById('change-new-pass').value;
+            const currentHash = await hashString(currentPass);
+
+            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || '[]');
+            const idx = users.findIndex(u => u.username === currentUser.username);
+
+            if (idx !== -1 && users[idx].passwordHash === currentHash) {
+                users[idx].passwordHash = await hashString(newPass);
+                localStorage.setItem(DB_KEYS.USERS, JSON.stringify(users));
+                alert('Password updated successfully!');
+                document.getElementById('change-current-pass').value = '';
+                document.getElementById('change-new-pass').value = '';
+                navigateView('dashboard');
+            } else {
+                alert('Incorrect current password!');
+            }
+        }
+
+        function handleLogout() {
+            updateHeartbeat(true);
+            localStorage.removeItem(DB_KEYS.SESSION);
+            location.reload();
+        }
+
+        /* ==========================================================================
+           REAL-TIME ONLINE/OFFLINE HEARTBEAT SYSTEM
+           ========================================================================== */
+        function updateHeartbeat(isLogout = false) {
+            if (!currentUser) return;
+            const heartbeats = JSON.parse(localStorage.getItem(DB_KEYS.HEARTBEATS) || '{}');
+            if (isLogout) {
+                delete heartbeats[currentUser.username];
+            } else {
+                heartbeats[currentUser.username] = Date.now();
+            }
+            localStorage.setItem(DB_KEYS.HEARTBEATS, JSON.stringify(heartbeats));
+        }
+
+        function checkTeamOnlineStatus() {
+            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || '[]');
+            const heartbeats = JSON.parse(localStorage.getItem(DB_KEYS.HEARTBEATS) || '{}');
+            const now = Date.now();
+            const threshold = 10000; // 10 seconds timeout
+
+            const container = document.getElementById('team-status-container');
+            if (!container) return;
+
+            container.innerHTML = users.map(u => {
+                const isActive = heartbeats[u.username] && (now - heartbeats[u.username] < threshold);
+                return `
+                    <div style="margin-top: ${u === users[0] ? '0' : '0.4rem'}; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <span class="status-dot ${isActive ? 'online' : 'offline'}"></span> 
+                            <span>${u.username}</span>
+                        </div>
+                        <strong style="color: ${isActive ? 'var(--accent-green)' : 'var(--text-muted)'}; font-size: 0.85rem;">
+                            ${isActive ? 'Online' : 'Offline'}
+                        </strong>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* ==========================================================================
+           NAVIGATION & VIEW ROUTING
+           ========================================================================== */
+        function toggleSidebar() {
+            document.getElementById('sidebar-drawer').classList.toggle('active');
+            document.getElementById('sidebar-overlay').classList.toggle('active');
+            document.getElementById('hamburger-btn').classList.toggle('active');
+        }
+
+        function navigateView(viewKey) {
+            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+
+            if (document.getElementById('sidebar-drawer').classList.contains('active')) {
+                toggleSidebar();
+            }
+
+            if (viewKey === 'dashboard') {
+                document.getElementById('view-dashboard').classList.add('active');
+                renderDashboard();
+            } else if (viewKey === 'tasks-my' || viewKey === 'tasks-all') {
+                document.getElementById('view-tasks').classList.add('active');
+                renderTasks(viewKey === 'tasks-my');
+            } else if (viewKey === 'youtube') {
+                document.getElementById('view-youtube').classList.add('active');
+                renderContent('YouTube');
+            } else if (viewKey === 'tiktok') {
+                document.getElementById('view-tiktok').classList.add('active');
+                renderContent('TikTok');
+            } else if (viewKey === 'calendar') {
+                document.getElementById('view-calendar').classList.add('active');
+                renderCalendar();
+            } else if (viewKey === 'messages') {
+                document.getElementById('view-messages').classList.add('active');
+                renderMessages();
+            } else if (viewKey === 'history') {
+                document.getElementById('view-history').classList.add('active');
+                renderHistory();
+            } else if (viewKey === 'password') {
+                document.getElementById('view-password').classList.add('active');
+            }
+        }
+
+        /* ==========================================================================
+           RENDER FUNCTIONS
+           ========================================================================== */
+        function renderDashboard() {
+            document.getElementById('dash-greeting-user').innerText = currentUser.username;
+            const tasks = JSON.parse(localStorage.getItem(DB_KEYS.TASKS) || '[]');
+            const content = JSON.parse(localStorage.getItem(DB_KEYS.CONTENT) || '[]');
+
+            document.getElementById('dash-task-total').innerText = tasks.length;
+            document.getElementById('dash-task-pending').innerText = tasks.filter(t => t.status !== 'Completed').length;
+            document.getElementById('dash-task-completed').innerText = tasks.filter(t => t.status === 'Completed').length;
+
+            document.getElementById('dash-yt-count').innerText = content.filter(c => c.platform === 'YouTube').length;
+            document.getElementById('dash-tt-count').innerText = content.filter(c => c.platform === 'TikTok').length;
+        }
+
+        function renderTasks(filterMyOnly = false) {
+            const container = document.getElementById('task-card-container');
+            const tasks = JSON.parse(localStorage.getItem(DB_KEYS.TASKS) || '[]');
+            
+            document.getElementById('task-view-heading').innerText = filterMyOnly ? `My Tasks (${currentUser.username})` : 'All Team Tasks';
+
+            const filtered = filterMyOnly ? tasks.filter(t => t.assignedTo === currentUser.username) : tasks;
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1;">No tasks found.</p>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(t => `
+                <div class="task-card">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span class="priority-badge p-${t.priority}">${t.priority}</span>
+                            <span style="font-size: 0.75rem; color: var(--tt-cyan); font-weight: 700;">${t.status}</span>
+                        </div>
+                        <h3 style="font-size: 1rem; margin-bottom: 0.4rem;">${t.title}</h3>
+                        <p style="font-size: 0.82rem; color: var(--text-muted);">${t.description}</p>
+                    </div>
+
+                    <div style="font-size: 0.75rem; color: var(--text-dim); border-top: 1px solid var(--border-color); padding-top: 0.6rem;">
+                        <div>Assigned: <strong style="color: #fff;">${t.assignedTo}</strong> | By: <strong>${t.creator}</strong></div>
+                        <div style="margin-top: 0.2rem;">Due: ${t.dueDate || 'N/A'}</div>
+                        ${t.fileLink ? `<a href="${t.fileLink}" target="_blank" style="color: var(--tt-cyan); font-weight: 600; display: inline-block; margin-top: 0.3rem;"><i class="fa-solid fa-link"></i> Open Work File</a>` : ''}
+                        
+                        <div class="task-actions">
+                            ${t.status !== 'Completed' ? `<button class="btn btn-sm btn-primary" onclick="updateTaskStatus('${t.id}', 'Completed')">Mark Completed</button>` : ''}
+                            <button class="btn btn-sm btn-secondary" onclick="deleteTask('${t.id}')"><i class="fa-solid fa-trash" style="color: var(--yt-red);"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderContent(platform) {
+            const container = document.getElementById(platform === 'YouTube' ? 'yt-content-container' : 'tt-content-container');
+            const items = JSON.parse(localStorage.getItem(DB_KEYS.CONTENT) || '[]').filter(c => c.platform === platform);
+
+            if (items.length === 0) {
+                container.innerHTML = `<p style="color: var(--text-muted); grid-column: 1/-1;">No ${platform} content items planned yet.</p>`;
+                return;
+            }
+
+            container.innerHTML = items.map(c => `
+                <div class="task-card">
+                    <div>
+                        <span class="priority-badge p-Medium">${c.stage}</span>
+                        <h3 style="font-size: 1.05rem; margin-top: 0.5rem;">${c.title}</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Publish Target: ${c.targetDate || 'TBD'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCalendar() {
+            const items = JSON.parse(localStorage.getItem(DB_KEYS.CONTENT) || '[]');
+            const container = document.getElementById('calendar-render');
+
+            container.innerHTML = `
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Scheduled Uploads</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    ${items.map(i => `
+                        <div style="background: var(--bg-sidebar); border: 1px solid var(--border-color); padding: 0.85rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong style="color: ${i.platform === 'YouTube' ? 'var(--yt-red)' : 'var(--tt-cyan)'};">${i.platform}</strong>: ${i.title}
+                            </div>
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">${i.targetDate}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderMessages() {
+            const messages = JSON.parse(localStorage.getItem(DB_KEYS.MESSAGES) || '[]');
+            const box = document.getElementById('chat-messages-box');
+
+            box.innerHTML = messages.map(m => {
+                const isSelf = m.sender === currentUser.username;
+                return `
+                    <div class="message-bubble ${isSelf ? 'msg-right' : 'msg-left'}">
+                        <div class="msg-sender">${m.sender}</div>
+                        <div>${m.text}</div>
+                        <div class="msg-time">${new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
+                `;
+            }).join('');
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function handleSendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || '[]');
+            const otherUser = users.find(u => u.username !== currentUser.username);
+            const target = otherUser ? otherUser.username : 'Team';
+
+            const messages = JSON.parse(localStorage.getItem(DB_KEYS.MESSAGES) || '[]');
+            messages.push({
+                id: 'm_' + Date.now(),
+                sender: currentUser.username,
+                receiver: target,
+                text: text,
+                timestamp: new Date().toISOString()
+            });
+
+            localStorage.setItem(DB_KEYS.MESSAGES, JSON.stringify(messages));
+            input.value = '';
+            renderMessages();
+        }
+
+        /* ==========================================================================
+           TASK MODAL & HANDLERS
+           ========================================================================== */
+        function openTaskModal() {
+            const users = JSON.parse(localStorage.getItem(DB_KEYS.USERS) || '[]');
+            const assigneeSelect = document.getElementById('modal-task-assignee');
+            if (assigneeSelect) {
+                assigneeSelect.innerHTML = users.map(u => 
+                    `<option value="${u.username}" ${u.username === currentUser.username ? 'selected' : ''}>${u.username}</option>`
+                ).join('');
+            }
+            document.getElementById('task-modal').classList.add('active');
+        }
+
+        function closeModals() {
+            document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+        }
+
+        function handleSaveTask(e) {
+            e.preventDefault();
+            const title = document.getElementById('modal-task-title').value.trim();
+            const desc = document.getElementById('modal-task-desc').value.trim();
+            const assignee = document.getElementById('modal-task-assignee').value;
+            const priority = document.getElementById('modal-task-priority').value;
+            const duedate = document.getElementById('modal-task-duedate').value;
+            const link = document.getElementById('modal-task-link').value.trim();
+
+            const tasks = JSON.parse(localStorage.getItem(DB_KEYS.TASKS) || '[]');
+            tasks.push({
+                id: 't_' + Date.now(),
+                title: title,
+                description: desc,
+                priority: priority,
+                status: 'Pending',
+                assignedTo: assignee,
+                creator: currentUser.username,
+                dueDate: duedate,
+                fileLink: link,
+                createdAt: new Date().toISOString()
+            });
+
+            localStorage.setItem(DB_KEYS.TASKS, JSON.stringify(tasks));
+            closeModals();
+            renderTasks();
+        }
+
+        function updateTaskStatus(taskId, newStatus) {
+            const tasks = JSON.parse(localStorage.getItem(DB_KEYS.TASKS) || '[]');
+            const idx = tasks.findIndex(t => t.id === taskId);
+            if (idx !== -1) {
+                tasks[idx].status = newStatus;
+                localStorage.setItem(DB_KEYS.TASKS, JSON.stringify(tasks));
+                renderTasks();
+            }
+        }
+
+        function deleteTask(taskId) {
+            if (!confirm('Are you sure you want to delete this task?')) return;
+            let tasks = JSON.parse(localStorage.getItem(DB_KEYS.TASKS) || '[]');
+            tasks = tasks.filter(t => t.id !== taskId);
+            localStorage.setItem(DB_KEYS.TASKS, JSON.stringify(tasks));
+            renderTasks();
+        }
+
+        /* ==========================================================================
+           APP INITIALIZATION & INTERVALS
+           ========================================================================== */
+        async function initApp() {
+            await initDatabaseDefaults();
+            if (currentUser) {
+                document.getElementById('auth-view').style.display = 'none';
+                document.getElementById('app-view').style.display = 'flex';
+                document.getElementById('header-username').innerText = currentUser.username;
+                navigateView('dashboard');
+
+                // Start Heartbeat
+                updateHeartbeat();
+                setInterval(() => updateHeartbeat(), 4000);
+                setInterval(() => checkTeamOnlineStatus(), 2000);
+            } else {
+                document.getElementById('auth-view').style.display = 'flex';
+                document.getElementById('app-view').style.display = 'none';
+                showAuthScreen('login');
+            }
+        }
+
+        window.addEventListener('beforeunload', () => {
+            updateHeartbeat(true);
+        });
+
+        initApp();
+    </script>
+</body>
+</html>
